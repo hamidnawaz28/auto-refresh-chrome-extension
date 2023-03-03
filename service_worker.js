@@ -15,8 +15,12 @@ chrome.runtime.onMessage.addListener(async (request) => {
   } = activeTabData;
 
   if (request.action === "start") {
+    // Start reloading, based on fix and random input
     if (valuePreference == "fix") {
+      // handle fix inputs
       let startTime = timeInSeconds(intervalPreference, fixValue);
+
+      // Refresh batch value
       const timeRef = setInterval(async function () {
         startTime = startTime - 1000;
         await chrome.action.setBadgeText({
@@ -27,23 +31,28 @@ chrome.runtime.onMessage.addListener(async (request) => {
           startTime = timeInSeconds(intervalPreference, fixValue);
       }, batchRefreshTime);
 
+      // Reload pages
       const intervalRef = setInterval(async () => {
         chrome.tabs.reload(activeTabId);
       }, startTime);
 
+      // Change tab state
       await alterPageData(activeTabId, {
         running: true,
         intervalObject: intervalRef,
         timeRef,
       });
     } else {
+      // recursive function that will generate random number until stopped
       const runInterval = async () => {
+        // Generate a random number in range
         const randomNumber = randomBetween(
           Number(fromRandom),
           Number(toRandom)
         );
         let startTime = timeInSeconds(intervalPreference, randomNumber);
 
+        // Refresh the batch after 1 sec
         const timeRef = setInterval(async () => {
           startTime = startTime - 1000;
           await chrome.action.setBadgeText({
@@ -53,12 +62,14 @@ chrome.runtime.onMessage.addListener(async (request) => {
           if (startTime == 0) startTime = fixValue;
         }, batchRefreshTime);
 
+        // Reload the page
         const intervalRef = setTimeout(async () => {
           await chrome.tabs.reload(activeTabId);
           clearInterval(timeRef);
           await runInterval();
         }, startTime);
 
+        // Alter tab state
         await alterPageData(activeTabId, {
           running: true,
           intervalObject: intervalRef,
@@ -68,16 +79,18 @@ chrome.runtime.onMessage.addListener(async (request) => {
       await runInterval();
     }
   } else if (request.action === "stop") {
+    // clean intervals and reset states of a tab
     clearInterval(intervalObject);
     clearTimeout(intervalObject);
     clearInterval(timeRef);
 
+    // Alter tab state
     await alterPageData(activeTabId, {
       running: false,
       intervalObject: null,
       timeRef: null,
     });
-
+    // Clear batch
     await chrome.action.setBadgeText({
       text: "",
       tabId: activeTabId,
@@ -85,6 +98,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
   }
 });
 
+// Change pageinformation
 const alterPageData = async (tabId, newData) => {
   const chromeStorage = await chrome.storage.sync.get();
   let autoRefreshData = chromeStorage?.autoRefreshData || [];
@@ -110,6 +124,7 @@ const getPageData = async (tabId) => {
   return autoRefreshData.find((data) => data.tabId == tabId);
 };
 
+// Event fired when a tab is added
 chrome.tabs.onCreated.addListener(async (tab) => {
   let refreshData = {
     tabId: tab.id,
@@ -132,6 +147,7 @@ chrome.tabs.onCreated.addListener(async (tab) => {
   await chrome.storage.sync.set(pageData);
 });
 
+// Event fired when a tab is closed
 chrome.tabs.onRemoved.addListener(async (tab) => {
   const prevData = await chrome.storage.sync.get();
   const prevPagesData = prevData?.autoRefreshData || [];
@@ -142,10 +158,12 @@ chrome.tabs.onRemoved.addListener(async (tab) => {
   await chrome.storage.sync.set(pageData);
 });
 
+// Generate a random number between min and max
 const randomBetween = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
+// Show user time in seconds, m:s and hours
 const timeViewer = (seconds) => {
   seconds = seconds / 1000;
   if (seconds == 0) return "";
@@ -160,6 +178,7 @@ const timeViewer = (seconds) => {
   }
 };
 
+// Convert milli-seconds to seconds, minutes and hours
 const timeInSeconds = (intervalPreference, time) => {
   const conversion = {
     seconds: time * 1000,
