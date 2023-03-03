@@ -1,5 +1,4 @@
 // popup.js
-
 const intervalPreferences = ["seconds", "minutes", "hours"];
 const valuePreferences = ["fix", "random"];
 const alterPageData = async (tabId, newData) => {
@@ -20,11 +19,13 @@ const alterPageData = async (tabId, newData) => {
   };
   await chrome.storage.sync.set(pageData);
 };
+
 const getPageData = async (tabId) => {
   const data = await chrome.storage.sync.get();
   const autoRefreshData = data?.autoRefreshData || [];
   return autoRefreshData.find((data) => data.tabId == tabId);
 };
+
 // set batch text :await chrome.action.setBadgeText({ text: "Hamid",tabId:1 });
 document.addEventListener("DOMContentLoaded", async () => {
   const tabs = await chrome.tabs.query({ active: true });
@@ -47,7 +48,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     stopButton.setAttribute("disabled", "true");
   });
 
-  // Handle preference event
+  // Handle interval preference event
   document.querySelectorAll("#interval-preference > input").forEach((el) => {
     el.addEventListener("click", async (e) => {
       const tabs = await chrome.tabs.query({ active: true });
@@ -62,6 +63,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       updateDom(refreshData);
     });
   });
+
+  // Handle interval value preference event
   document
     .querySelectorAll(".interval-item input[type='radio']")
     .forEach((el) => {
@@ -79,6 +82,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     });
 
+  // Handle fix value event
   document.querySelector("#fixValue").addEventListener("change", async (e) => {
     const tabs = await chrome.tabs.query({ active: true });
     const activeTabId = tabs[0].id;
@@ -91,6 +95,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     await alterPageData(activeTabId, refreshData);
     updateDom(refreshData);
   });
+
+  // Randrom from change event
   document
     .querySelector("#randomValueFrom")
     .addEventListener("change", async (e) => {
@@ -105,6 +111,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       await alterPageData(activeTabId, refreshData);
       updateDom(refreshData);
     });
+
+  // Randrom to change event
   document
     .querySelector("#randomValueTo")
     .addEventListener("change", async (e) => {
@@ -121,6 +129,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 });
 
+// Dom refresh handle
 const updateDom = (data) => {
   const fixValueRef = document.getElementById("fixValue");
   const randomValueFromRef = document.getElementById("randomValueFrom");
@@ -152,23 +161,3 @@ const updateDom = (data) => {
     stopButton.setAttribute("disabled", "true");
   }
 };
-
-// // Set the initial badge text
-// chrome.browserAction.setBadgeText({ text: "10:00" });
-
-// // Set the end time (in seconds)
-// const endTime = Date.now() + 10 * 60 * 1000; // 10 minutes
-
-// // Update the badge text every second
-// const interval = setInterval(() => {
-//   const remainingTime = Math.max(Math.ceil((endTime - Date.now()) / 1000), 0);
-//   const minutes = Math.floor(remainingTime / 60);
-//   const seconds = remainingTime % 60;
-//   const text = `${minutes}:${seconds.toString().padStart(2, "0")}`;
-//   chrome.browserAction.setBadgeText({ text });
-
-//   // Clear the interval when the timer is done
-//   if (remainingTime === 0) {
-//     clearInterval(interval);
-//   }
-// }, 1000);
