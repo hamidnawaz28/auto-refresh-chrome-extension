@@ -1,21 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "Auto refresh",
+  "name": "Auto Page Refresh",
   "version": "1.0",
 
-  "permissions": ["tabs", "activeTab", "scripting", "storage"],
+  "permissions": ["tabs", "storage"],
 
   "background": {
     "service_worker": "service_worker.js"
   },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["scripts/content.js"],
-      "run_at": "document_end"
-    }
-  ],
-  "host_permissions": ["<all_urls>"],
   "action": {
     "default_icon": {
       "16": "icons/refresh.png",
