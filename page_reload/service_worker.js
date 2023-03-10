@@ -79,29 +79,42 @@ const getPageData = async (tabId) => {
 
 // Event fired when a tab is added
 chrome.tabs.onCreated.addListener(async (tab) => {
-  let refreshData = {
-    tabId: tab.id,
+  await updateTabsStorage(tab.id);
+});
+
+// When first time extension is installed
+chrome.runtime.onInstalled.addListener(async () => {
+  const tabs = await chrome.tabs.query({});
+  for (const tab of tabs) {
+    await updateTabsStorage(tab.id);
+  }
+});
+
+// Event fired when a tab is closed
+chrome.tabs.onRemoved.addListener(async (tabId) => {
+  await updateTabsStorage(tabId, false);
+});
+
+const updateTabsStorage = async (tabId, add = true) => {
+  const refreshData = {
+    tabId,
     running: false,
     intervalValue: 10,
     intervalObject: null,
     timeRef: null,
   };
-
   const prevData = await chrome.storage.sync.get();
   const prevPagesData = prevData?.autoRefreshData || [];
-  const pageData = {
-    autoRefreshData: [...prevPagesData, { ...refreshData }],
-  };
+  let pageData = {};
+  if (add) {
+    pageData = {
+      autoRefreshData: [...prevPagesData, { ...refreshData }],
+    };
+  } else {
+    const filteredData = prevPagesData.filter((data) => data.tabId != tabId);
+    pageData = {
+      autoRefreshData: [...filteredData],
+    };
+  }
   await chrome.storage.sync.set(pageData);
-});
-
-// Event fired when a tab is closed
-chrome.tabs.onRemoved.addListener(async (tab) => {
-  const prevData = await chrome.storage.sync.get();
-  const prevPagesData = prevData?.autoRefreshData || [];
-  const filteredData = prevPagesData.filter((data) => data.tabId != tab);
-  const pageData = {
-    autoRefreshData: [...filteredData],
-  };
-  await chrome.storage.sync.set(pageData);
-});
+};

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Auto Refresh",
+  "description": "This extension user to auto refresh, page reload, reload page and auto reload page in fixed intervals",
   "version": "1.0",
-
   "permissions": ["tabs", "storage"],
 
   "background": {
