@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Auto Page Refresh",
-  "description": "This extension enables users to auto page refresh after regular and random intervals with option change time and value preference",
+  "description": "This extension enables users to auto page refresh after regular and random intervals with time and value preference change option.",
   "version": "1.1",
 
   "permissions": ["tabs", "storage"],

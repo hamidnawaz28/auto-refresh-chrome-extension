@@ -1,6 +1,6 @@
 # Auto Page Refresh
 
-This extension enables users to auto page refresh after regular and random intervals with option change time and value preference
+This extension enables users to auto page refresh after regular and random intervals with time and value preference change option.
 
 # Auto Refresh
 
