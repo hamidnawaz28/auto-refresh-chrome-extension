@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Auto Reload",
+  "description": "This extension allows user to auto refresh their pages using a random interval of time with time preference option.",
+  "version": "1.0",
+  "permissions": ["storage"],
+
+  "background": {
+    "service_worker": "service_worker.js"
+  },
+  "action": {
+    "default_icon": {
+      "16": "icons/auto_refresh.png",
+      "32": "icons/auto_refresh.png",
+      "48": "icons/auto_refresh.png",
+      "128": "icons/auto_refresh.png"
+    },
+    "default_title": "Auto Reload",
+    "default_popup": "popup/popup.html"
+  },
+  "icons": {
+    "16": "icons/auto_refresh.png",
+    "32": "icons/auto_refresh.png",
+    "48": "icons/auto_refresh.png",
+    "128": "icons/auto_refresh.png"
+  }
+}

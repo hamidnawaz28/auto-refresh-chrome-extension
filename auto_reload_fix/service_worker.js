@@ -4,8 +4,7 @@ chrome.runtime.onMessage.addListener(async (request) => {
   const activeTabId = tabs[0].id;
   const activeTabData = await getPageData(activeTabId);
 
-  const { intervalValue, intervalObject, timeRef, intervalPreference } =
-    activeTabData;
+  const { intervalValue, intervalObject, timeRef } = activeTabData;
 
   if (request.action === "start") {
     // handle fix inputs

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Auto Page Refresh",
-  "description": "This extension user to auto refresh, page reload, reload page and auto reload page in fixed and random intervals",
+  "description": "This extension enables users to auto page refresh after regular and random intervals with option change time and value preference",
   "version": "1.1",
 
   "permissions": ["tabs", "storage"],
@@ -11,18 +11,18 @@
   },
   "action": {
     "default_icon": {
-      "16": "icons/refresh.png",
-      "32": "icons/refresh.png",
-      "48": "icons/refresh.png",
-      "128": "icons/refresh.png"
+      "16": "icons/auto_page_refresh.png",
+      "32": "icons/auto_page_refresh.png",
+      "48": "icons/auto_page_refresh.png",
+      "128": "icons/auto_page_refresh.png"
     },
-    "default_title": "Automate page refresh",
+    "default_title": "Auto Page Refresh",
     "default_popup": "popup/popup.html"
   },
   "icons": {
-    "16": "icons/refresh.png",
-    "32": "icons/refresh.png",
-    "48": "icons/refresh.png",
-    "128": "icons/refresh.png"
+    "16": "icons/auto_page_refresh.png",
+    "32": "icons/auto_page_refresh.png",
+    "48": "icons/auto_page_refresh.png",
+    "128": "icons/auto_page_refresh.png"
   }
 }
